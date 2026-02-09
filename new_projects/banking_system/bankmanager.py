@@ -1,62 +1,78 @@
+import json
+import os
+import random
 from accounts import Account
-import random,os,json
+
+
+class AccountIDError(Exception):
+    """Raised when an account ID is invalid or already exists."""
+    pass
+
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "accounts.json")
 
 
 class BankManager:
+    """Handles account creation, transactions, and persistence."""
+
     def __init__(self):
-        self.__accounts = {}
+        self._accounts = {}
         self.load_accounts()
 
     def load_accounts(self):
-        if os.path.exists("accounts.json"):
-            with open("accounts.json", "r") as f:
-                accounts_data = json.load(f)
-                for acc_id, acc_info in accounts_data.items():
-                    account = Account(acc_info["account_number"], acc_info["customer_name"], acc_info["balance"])
-                    self.__accounts[acc_id] = account
+        """Load accounts from JSON file if it exists."""
+        if os.path.exists(DATA_FILE):
+            with open(DATA_FILE, "r") as file:
+                data = json.load(file)
+                for acc_id, info in data.items():
+                    self._accounts[acc_id] = Account(
+                        info["account_number"],
+                        info["customer_name"],
+                        info["balance"]
+                    )
 
     def save_accounts(self):
-        accounts_data = {acc_id: acc.to_dict() for acc_id, acc in self.__accounts.items()}
-        with open("accounts.json", "w") as f:
-            json.dump(accounts_data, f, indent=4)   
+        """Save all accounts to JSON file."""
+        with open(DATA_FILE, "w") as file:
+            json.dump(
+                {acc_id: acc.to_dict() for acc_id, acc in self._accounts.items()},
+                file,
+                indent=4
+            )
 
-    def create_account_id(self):
+    def create_account_id(self) -> str:
+        """Generate a unique account ID."""
         while True:
-            account_id = str(random.randint(100000, 999999))
-            if account_id not in self.__accounts:
-                return account_id
+            acc_id = str(random.randint(100000, 999999))
+            if acc_id not in self._accounts:
+                return acc_id
 
-    def create_account(self, account_id, name, initial_deposit=0.0):
-        if account_id in self.__accounts:
-            raise iderror("Account ID already exists.")
-        new_account = Account(account_id, name, initial_deposit)
-        self.__accounts[account_id] = new_account
+    def create_account(self, name: str, initial_deposit: float) -> Account:
+        """Create a new bank account."""
+        acc_id = self.create_account_id()
+        account = Account(acc_id, name, initial_deposit)
+        self._accounts[acc_id] = account
         self.save_accounts()
-        return new_account
-    
-    def get_account(self, account_id):
-        return self.__accounts.get(account_id, None)
+        return account
 
-    def deposit_to_account(self, account_id, amount):
-        account = self.get_account(account_id)
-        if account:
-            self.save_accounts()
-            return account.deposit(amount)
-        else:
-            raise iderror("Account ID does not exist.")
+    def get_account(self, acc_id: str) -> Account:
+        account = self._accounts.get(acc_id)
+        if not account:
+            raise AccountIDError("Account ID does not exist.")
+        return account
 
-    def withdraw_from_account(self, account_id, amount):
-        account = self.get_account(account_id)
-        if account:
-            self.save_accounts()
-            return account.withdraw(amount)
-        raise iderror("Account ID does not exist.")
+    def deposit(self, acc_id: str, amount: float) -> float:
+        account = self.get_account(acc_id)
+        account.deposit(amount)
+        self.save_accounts()
+        return account.balance
 
-    def get_account_balance(self, account_id):
-        account = self.get_account(account_id)
-        if account:
-            return account.balance
-        return None
-    
-class iderror(Exception):
-    pass
+    def withdraw(self, acc_id: str, amount: float) -> float:
+        account = self.get_account(acc_id)
+        account.withdraw(amount)
+        self.save_accounts()
+        return account.balance
+
+    def get_balance(self, acc_id: str) -> float:
+        return self.get_account(acc_id).balance
