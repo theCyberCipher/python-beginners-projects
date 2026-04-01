@@ -37,3 +37,7 @@ India 🇮🇳
 India 🇮🇳  
 "Learning in public, one commit at a time."
 
+6.Chami Dilshika  
+[@Chamidilshika](https://github.com/Chamidilshika)  
+Sri Lanka 🇱🇰  
+"Keep learning, keep building, and never be afraid to try new things in tech."
