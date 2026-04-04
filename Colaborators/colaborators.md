@@ -23,12 +23,17 @@ Anonymous :)
 India 🇮🇳
 "The secret of getting ahead is getting started."
 
-1. Shyamsundar  
+5. Shyamsundar  
 [@Shyamsundar-eng](https://github.com/Shyamsundar-eng)  
 India 🇮🇳  
 "Learning in public, one commit at a time."
 
-2. Diego Alexander  
+6.Chami Dilshika  
+[@Chamidilshika](https://github.com/Chamidilshika)  
+Sri Lanka 🇱🇰  
+"Keep learning, keep building, and never be afraid to try new things in tech."
+
+7. Diego Alexander  
 [@Dm2998](https://github.com/Dm2998)  
 Ireland 🇮🇪  
 "Every small commit is a step toward becoming a better developer."
