@@ -1,43 +1,48 @@
+class InsufficientFundsError(Exception):
+    """Raised when withdrawal amount exceeds available balance."""
+    pass
+
+
 class Account:
-    def __init__(self, account_number, customer_name, initial_balance=0):
-        self.__account_number = account_number
-        self.__customer_name = customer_name
-        self.__balance = initial_balance
+    """Represents a bank account."""
+
+    def __init__(self, account_number: str, customer_name: str, initial_balance: float = 0.0):
+        self._account_number = account_number
+        self._customer_name = customer_name
+        self._balance = initial_balance
 
     @property
     def account_number(self):
-        return self.__account_number
+        return self._account_number
 
     @property
     def customer_name(self):
-        return self.__customer_name
+        return self._customer_name
 
     @property
     def balance(self):
-        return self.__balance
+        return self._balance
 
-    def deposit(self, amount):
+    def deposit(self, amount: float) -> float:
+        """Deposit a positive amount into the account."""
         if amount <= 0:
             raise ValueError("Deposit amount must be positive.")
-        self.__balance += amount
-        return self.__balance
-    
-    def to_dict(self):
-        return {
-            "account_number": self.__account_number,
-            "customer_name": self.__customer_name,
-            "balance": self.__balance
-        }
+        self._balance += amount
+        return self._balance
 
-    def withdraw(self, amount):
+    def withdraw(self, amount: float) -> float:
+        """Withdraw a positive amount from the account."""
         if amount <= 0:
             raise ValueError("Withdrawal amount must be positive.")
-        if self.__balance >= amount:
-            self.__balance -= amount
-            return self.__balance
-        else:
+        if amount > self._balance:
             raise InsufficientFundsError("Insufficient funds.")
+        self._balance -= amount
+        return self._balance
 
-class InsufficientFundsError(Exception):
-    pass
-
+    def to_dict(self) -> dict:
+        """Convert account data to dictionary for persistence."""
+        return {
+            "account_number": self._account_number,
+            "customer_name": self._customer_name,
+            "balance": self._balance
+        }
