@@ -38,3 +38,7 @@ Sri Lanka 🇱🇰
 Ireland 🇮🇪  
 "Every small commit is a step toward becoming a better developer."
 
+8.Himanshu Deo
+[@theCyberChiper](https://github.com/theCyberCipher)
+India 🇮🇳 
+"If you wanna be a great developer, don't just learn to code. Learn to solve problems with code."
